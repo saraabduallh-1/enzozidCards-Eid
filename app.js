@@ -35,7 +35,7 @@ const TEMPLATES = {
     src: "./assets/1.png",
     width: 1080,
     height: 1350,
-    textBox: { x: 540, y: 1050, maxWidth: 820 },
+    textBox: { x: 540, y: 1040, maxWidth: 820 },
     baseFontSize: 33,
     color: "#889471",
   },
