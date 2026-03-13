@@ -13,10 +13,9 @@ const nameInput = document.getElementById("nameInput");
 //  عرض قالب افتراضي أول ما تفتح الصفحة
 const defaultTemplateKey = templateSelect.value;
 
-
 loadTemplate(defaultTemplateKey).then(() => {
   // ضبط مقاس الكانفس على مقاس القالب
-  canvas.width  = TEMPLATES[defaultTemplateKey].width;
+  canvas.width = TEMPLATES[defaultTemplateKey].width;
   canvas.height = TEMPLATES[defaultTemplateKey].height;
 
   // ارسم البطاقة (اكتب اسمك/أو الاسم الحالي)
@@ -36,9 +35,9 @@ const TEMPLATES = {
     src: "./assets/1.png",
     width: 1080,
     height: 1350,
-    textBox: { x: 540, y: 990, maxWidth: 820 },
+    textBox: { x: 540, y: 1050, maxWidth: 820 },
     baseFontSize: 33,
-    color: "#B9D6D5"
+    color: "#889471",
   },
   template2: {
     src: "./assets/2.png",
@@ -46,16 +45,16 @@ const TEMPLATES = {
     height: 1350,
     textBox: { x: 540, y: 1090, maxWidth: 820 },
     baseFontSize: 32,
-    color: "#889471"
+    color: "#889471",
   },
 
   template3: {
     src: "./assets/3.png",
     width: 1080,
     height: 1350,
-    textBox: { x: 540, y: 1127, maxWidth: 820 , },
+    textBox: { x: 540, y: 1127, maxWidth: 820 },
     baseFontSize: 32,
-    color: "#FEFDF7"
+    color: "#FEFDF7",
   },
 
   template4: {
@@ -63,11 +62,9 @@ const TEMPLATES = {
     width: 1080,
     height: 1350,
     textBox: { x: 540, y: 1100, maxWidth: 820 },
-    baseFontSize: 28,
+    baseFontSize: 30,
     color: "#F5F4F0",
-
-    
-  }
+  },
 };
 // ====== 3) تحميل صورة القالب ======
 let bgImage = null;
@@ -133,7 +130,7 @@ function updateUrlParams({ t, name, align }) {
   if (name) p.set("name", name);
   if (align) p.set("align", align);
 
-  const newUrl = `${window.location.pathname}?${p.toString()}`
+  const newUrl = `${window.location.pathname}?${p.toString()}`;
   window.history.replaceState({}, "", newUrl);
 }
 
@@ -185,25 +182,31 @@ function draw() {
   const fontFamily = `"BrandFont", Arial`;
 
   // صغر الخط لو الاسم طويل
-  const fontSize = fitFontSize(name, cfg.textBox.maxWidth, cfg.baseFontSize, fontFamily);
+  const fontSize = fitFontSize(
+    name,
+    cfg.textBox.maxWidth,
+    cfg.baseFontSize,
+    fontFamily,
+  );
   ctx.font = `500 ${fontSize}px ${fontFamily}`;
 
   // (اختياري) ظل خفيف يساعد القراءة على خلفية مزدحمة
-   ctx.shadowBlur = 6;
+  ctx.shadowBlur = 6;
   ctx.shadowOffsetY = 2;
-  
 
   // ارسم الاسم
 
-const lines = name.split("\n"); // يفصل السطور
+  const lines = name.split("\n"); // يفصل السطور
 
-const lineHeight = 48; // المسافة بين السطرين (عدّليها حسب القالب)
+  const lineHeight = 48; // المسافة بين السطرين (عدّليها حسب القالب)
 
-lines.slice(0, 2).forEach((line, index) => {
-  ctx.fillText(line.trim(), cfg.textBox.x, cfg.textBox.y + (index * lineHeight));
-});
-
-
+  lines.slice(0, 2).forEach((line, index) => {
+    ctx.fillText(
+      line.trim(),
+      cfg.textBox.x,
+      cfg.textBox.y + index * lineHeight,
+    );
+  });
 }
 // ====== 6) تحميل  ======
 
@@ -214,13 +217,16 @@ downloadBtn.addEventListener("click", async () => {
     return;
   }
 
-  const blob = await new Promise(r => canvas.toBlob(r, "image/png", 1));
+  const blob = await new Promise((r) => canvas.toBlob(r, "image/png", 1));
   if (!blob) return;
 
   const file = new File([blob], "التهنئة.png", { type: "image/png" });
 
-  //  أولاً: افتح الشير 
-  if (navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
+  //  أولاً: افتح الشير
+  if (
+    navigator.share &&
+    (!navigator.canShare || navigator.canShare({ files: [file] }))
+  ) {
     try {
       await navigator.share({
         files: [file],
@@ -239,14 +245,13 @@ downloadBtn.addEventListener("click", async () => {
   URL.revokeObjectURL(url);
 });
 
-
 // ====== 7) نسخ رابط ذكي ======
 /**
  * ينسخ رابط يحتوي على القالب + الاسم + المحاذاة
  * يقدر العميل يفتحه وتجيه نفس الإعدادات
  */
 async function copySmartLink() {
-  const fixedUrl = "https://enzozid-cards-eid.vercel.app/";
+  const fixedUrl = "https://enzozid-cards2026.vercel.app/";
 
   try {
     await navigator.clipboard.writeText(fixedUrl);
@@ -256,17 +261,14 @@ async function copySmartLink() {
   }
 }
 
-
 // ====== 8) مزامنة الرابط مع أي تغيير ======
 function syncUrl() {
   updateUrlParams({
     t: templateSelect.value,
     name: safeName(nameInput.value),
-    align: "center"
+    align: "center",
   });
 }
-
-
 
 // ====== 10) أحداث المستخدم (Event Listeners) ======
 templateSelect.addEventListener("change", async () => {
@@ -281,11 +283,7 @@ nameInput.addEventListener("input", () => {
   syncUrl();
 });
 
-;
-
-
 copyLinkBtn.addEventListener("click", copySmartLink);
-
 
 (async () => {
   resizeCanvas(templateSelect.value);
