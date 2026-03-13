@@ -246,7 +246,7 @@ downloadBtn.addEventListener("click", async () => {
  * يقدر العميل يفتحه وتجيه نفس الإعدادات
  */
 async function copySmartLink() {
-  const fixedUrl = "https://enzozid-cards2026.vercel.app/";
+  const fixedUrl = "https://enzozid-cards-eid.vercel.app/";
 
   try {
     await navigator.clipboard.writeText(fixedUrl);
